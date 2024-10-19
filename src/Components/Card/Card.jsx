@@ -1,7 +1,7 @@
-import { useState, useEffect, } from "react";
+import { useState, useEffect } from "react";
 import "./Card.css";
 
-export default function Card(props) {
+export default function Card({ numero }) {
   const [posts, setPosts] = useState({
     id: "uknown",
     name: "uknown",
@@ -13,48 +13,36 @@ export default function Card(props) {
     location_name: "uknown",
     image: "",
     episode: [],
+    listInfoClicked: false,
+    listEpisodesClicked: false,
   });
 
-  function handleInfo() {
-    return (
-      <div>
-        {/*         <ul className="info-list">
-          <li>Status: {posts.status}</li>
-          <li>Specie: {posts.species}</li>
-          <li>Type: {posts.type}</li>
-          <li>Gender: {posts.gender}</li>
-          <li>Origin: {posts.origin_name}</li>
-          <li>Location: {posts.location_name}</li>
-        </ul> */}
-      </div>
-    );
+  const [info, setInfo] = useState(false);
+  const [episodes, setEpisodes] = useState(false);
+
+  function listInfo() {
+    setInfo(!info);
   }
 
-  function handleEpisodes() {
-    <div>
-      <ul className="episodes-list">
-        {posts.episode.map((episode) => (
-          <li key={JSON.stringify(episode)}>{episode}</li>
-        ))}
-      </ul>
-    </div>;
+  function listEpisodes() {
+    setEpisodes(!episodes);
   }
 
+  // TODO: PENDIENTE HACER FETCH A TODAS LAS PAGINAS DONDE HAY PERSONAJES
   useEffect(() => {
     fetch("https://rickandmortyapi.com/api/character")
       .then((resp) => resp.json())
       .then((data) => {
         setPosts({
-          id: data.results[0].id,
-          name: data.results[0].name,
-          status: data.results[0].status,
-          species: data.results[0].species,
-          type: data.results[0].type,
-          gender: data.results[0].gender,
-          origin_name: data.results[0].origin.name,
-          location_name: data.results[0].location.name,
-          image: data.results[0].image,
-          episode: data.results[0].episode,
+          name: data.results[numero].name,
+          image: data.results[numero].image,
+          status: data.results[numero].status,
+          species: data.results[numero].species,
+          type: data.results[numero].type,
+          gender: data.results[numero].gender,
+          origin_name: data.results[numero].origin.name,
+          location_name: data.results[numero].location.name,
+          episode: data.results[numero].episode,
         });
       })
       .catch((err) => {
@@ -68,8 +56,29 @@ export default function Card(props) {
       <img className="foto" src={posts.image}></img>
       <br />
       <div className="botones">
-        <button onClick={handleInfo}>INFO</button>
-        <button onClick={handleEpisodes}>EPISODES</button>
+        <button onClick={listInfo}>INFO</button>
+        {info && (
+          <div>
+            <ul className="info-list">
+              <li>Status: {posts.status}</li>
+              <li>Specie: {posts.species}</li>
+              <li>Type: {posts.type}</li>
+              <li>Gender: {posts.gender}</li>
+              <li>Origin: {posts.origin_name}</li>
+              <li>Location: {posts.location_name}</li>
+            </ul>
+          </div>
+        )}
+        <button onClick={listEpisodes}>EPISODES</button>
+        {episodes && (
+          <div>
+            <ul className="episodes-list">
+              {posts.episode.map((episode) => (
+                <li key={JSON.stringify(episode)}>{episode}</li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </div>
   );
