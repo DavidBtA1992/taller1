@@ -1,31 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, } from "react";
 import "./Card.css";
 
 export default function Card(props) {
-  const handleInfo = () => {
-    return (
-      <div>
-        <ul className="info-list">
-          <li>Status: {posts.status}</li>
-          <li>Specie: {posts.species}</li>
-          <li>Type: {posts.type}</li>
-          <li>Gender: {posts.gender}</li>
-          <li>Origin: {posts.origin_name}</li>
-          <li>Location: {posts.location_name}</li>
-        </ul>
-      </div>
-    );
-  };
-
-  const handleEpisodes = () =>  
-      <div>
-        <ul className="episodes-list">
-          {posts.episode.map((episode) => (
-            <li key={JSON.stringify(episode)}>{episode}</li>
-          ))}
-        </ul>
-      </div>
-
   const [posts, setPosts] = useState({
     id: "uknown",
     name: "uknown",
@@ -39,12 +15,36 @@ export default function Card(props) {
     episode: [],
   });
 
+  function handleInfo() {
+    return (
+      <div>
+        {/*         <ul className="info-list">
+          <li>Status: {posts.status}</li>
+          <li>Specie: {posts.species}</li>
+          <li>Type: {posts.type}</li>
+          <li>Gender: {posts.gender}</li>
+          <li>Origin: {posts.origin_name}</li>
+          <li>Location: {posts.location_name}</li>
+        </ul> */}
+      </div>
+    );
+  }
+
+  function handleEpisodes() {
+    <div>
+      <ul className="episodes-list">
+        {posts.episode.map((episode) => (
+          <li key={JSON.stringify(episode)}>{episode}</li>
+        ))}
+      </ul>
+    </div>;
+  }
+
   useEffect(() => {
     fetch("https://rickandmortyapi.com/api/character")
       .then((resp) => resp.json())
       .then((data) => {
         setPosts({
-          ...posts,
           id: data.results[0].id,
           name: data.results[0].name,
           status: data.results[0].status,
